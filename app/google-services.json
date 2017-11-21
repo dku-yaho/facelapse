@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "422420184850",
+    "firebase_url": "https://facelapse-d1e61.firebaseio.com",
+    "project_id": "facelapse-d1e61",
+    "storage_bucket": "facelapse-d1e61.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:422420184850:android:4b2333bb4644eadf",
+        "android_client_info": {
+          "package_name": "com.yaho.facelapse"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "422420184850-jt9idemnpg51khkeg309bbd142ciusk7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC41o3cBn-gKJ6PjCotuDxkgkL7z6yRvhU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -21,6 +21,11 @@
             android:name="com.yaho.facelapse.ScreenActivity">
         </activity>
 
+        <activity
+            android:name=".Pop"
+            android:theme="@style/AppTheme.CustomTheme">
+        </activity>
+
     </application>
 
 </manifest>

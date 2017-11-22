@@ -29,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), ScreenActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.buttonmanual:
+                startActivity(new Intent(MainActivity.this,Pop.class));
+                break;
         }
     }
 

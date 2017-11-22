@@ -5,10 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:baselineAligned="false"
+    android:orientation="vertical"
     tools:context="com.yaho.facelapse.MainActivity">
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="horizontal">
@@ -21,15 +22,8 @@
             android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="SELFIE"
-            android:onClick="onClick"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="horizontal">
+            android:onClick="onClick"
+            android:text="@string/selfie" />
 
         <Button
             android:id="@+id/buttonalbum"
@@ -39,8 +33,19 @@
             android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="ALBUM"
-            android:onClick="onClick"/>
+            android:onClick="onClick"
+            android:text="@string/album" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/buttonmanual"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:text="@string/manual" />
 
 </LinearLayout>

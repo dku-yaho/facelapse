@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/common_action_bar_splitter">
+
+    <TextView
+        android:id="@+id/manualTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:text="FaceLapse Rules"
+        android:textSize="46sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/manual1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/manualTitle"
+        android:layout_below="@+id/manualTitle"
+        android:layout_marginTop="40dp"
+        android:text="1 Selfie per Day"
+        android:textSize="36sp" />
+
+    <TextView
+        android:id="@+id/manual2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/manualTitle"
+        android:layout_below="@+id/manual1"
+        android:layout_marginTop="40dp"
+        android:text="30 Photos for 1 Video"
+        android:textSize="36sp" />
+
+    <TextView
+        android:id="@+id/manual3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/manualTitle"
+        android:layout_below="@+id/manual2"
+        android:layout_marginTop="40dp"
+        android:text="No Delete Function"
+        android:textSize="36sp" />
+
+    <TextView
+        android:id="@+id/num1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/manual2"
+        android:layout_marginEnd="20dp"
+        android:layout_toStartOf="@+id/manual2"
+        android:text="1"
+        android:textSize="46sp"
+        android:textStyle="bold|italic" />
+
+    <TextView
+        android:id="@+id/num2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/manual3"
+        android:layout_alignStart="@+id/num1"
+        android:text="2"
+        android:textSize="46sp"
+        android:textStyle="bold|italic" />
+
+    <TextView
+        android:id="@+id/num3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/manual3"
+        android:layout_alignStart="@+id/num2"
+        android:text="3"
+        android:textSize="46sp"
+        android:textStyle="bold|italic" />
+</RelativeLayout>

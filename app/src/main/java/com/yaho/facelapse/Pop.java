@@ -32,15 +32,15 @@ public class Pop extends Activity {
         tv_m.setTypeface(font_m);
 
         TextView tv_m1 = (TextView) findViewById(R.id.manual1);
-        Typeface font_m1 = Typeface.createFromAsset(getAssets(), "AmaticSC-Bold.ttf");
+        Typeface font_m1 = Typeface.createFromAsset(getAssets(), "AmaticSC-Regular.ttf");
         tv_m1.setTypeface(font_m1);
 
         TextView tv_m2 = (TextView) findViewById(R.id.manual2);
-        Typeface font_m2 = Typeface.createFromAsset(getAssets(), "AmaticSC-Bold.ttf");
+        Typeface font_m2 = Typeface.createFromAsset(getAssets(), "AmaticSC-Regular.ttf");
         tv_m2.setTypeface(font_m2);
 
         TextView tv_m3 = (TextView) findViewById(R.id.manual3);
-        Typeface font_m3 = Typeface.createFromAsset(getAssets(), "AmaticSC-Bold.ttf");
+        Typeface font_m3 = Typeface.createFromAsset(getAssets(), "AmaticSC-Regular.ttf");
         tv_m3.setTypeface(font_m3);
 
 

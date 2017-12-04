@@ -22,7 +22,7 @@
         android:layout_alignStart="@+id/manualTitle"
         android:layout_below="@+id/manualTitle"
         android:layout_marginTop="40dp"
-        android:text="1 Selfie per Day"
+        android:text="1  Selfie  per  Day"
         android:textSize="36sp" />
 
     <TextView
@@ -32,7 +32,7 @@
         android:layout_alignStart="@+id/manualTitle"
         android:layout_below="@+id/manual1"
         android:layout_marginTop="40dp"
-        android:text="30 Photos for 1 Video"
+        android:text="30  Photos  for  1  Video"
         android:textSize="36sp" />
 
     <TextView
@@ -42,7 +42,7 @@
         android:layout_alignStart="@+id/manualTitle"
         android:layout_below="@+id/manual2"
         android:layout_marginTop="40dp"
-        android:text="No Delete Function"
+        android:text="No  Delete  Function"
         android:textSize="36sp" />
 
     <TextView

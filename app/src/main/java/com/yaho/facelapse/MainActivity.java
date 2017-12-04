@@ -25,6 +25,16 @@ public class MainActivity extends AppCompatActivity {
         Typeface font = Typeface.createFromAsset(getAssets(), "AmaticSC-Bold.ttf");
         tv.setTypeface(font);
 
+        /* set font for title text*/
+        TextView tv2 = (TextView) findViewById(R.id.textSelfie);
+        Typeface font2 = Typeface.createFromAsset(getAssets(), "AmaticSC-Bold.ttf");
+        tv2.setTypeface(font2);
+
+        /* set font for title text*/
+        TextView tv3 = (TextView) findViewById(R.id.textAlbum);
+        Typeface font3 = Typeface.createFromAsset(getAssets(), "AmaticSC-Bold.ttf");
+        tv3.setTypeface(font3);
+
     }
 
     public void onClick(View view) {

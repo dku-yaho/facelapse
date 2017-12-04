@@ -21,6 +21,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.StatFs;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -44,18 +45,32 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     Preview preview;
     Camera camera;
     Context ctx;
-
     private final static int PERMISSIONS_REQUEST_CODE = 100;
     // Camera.CameraInfo.CAMERA_FACING_FRONT or Camera.CameraInfo.CAMERA_FACING_BACK
     //전방 카메라 사용
     private final static int CAMERA_FACING = Camera.CameraInfo.CAMERA_FACING_FRONT;
     private AppCompatActivity mActivity;
+
+    //내부저장소에 여유 공간 확인
+    private double checkInternalAvailableMemory() {
+        StatFs stat= new StatFs(Environment.getDataDirectory().getPath());
+        long blockSize = stat.getBlockSizeLong();
+        long totalSize = stat.getBlockCountLong() * blockSize;
+        //사용가능한 Internal Storage 크기
+        long availableSize = stat.getAvailableBlocksLong() * blockSize;
+        //사용량
+        DecimalFormat df = new DecimalFormat("#,###");
+        double storage = 100.0*(totalSize-availableSize)/totalSize;
+        return storage;
+    }
+
 
     //camera 앱 restart함수
     public static void doRestart(Context c) {
@@ -195,6 +210,13 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "Camera not supported",
                     Toast.LENGTH_LONG).show();
         }
+        //사진 저장할 공간이 부족한 경우
+        double size = checkInternalAvailableMemory();
+        if(size >80){
+            Toast.makeText(MainActivity.this, "No memory for save image",
+                    Toast.LENGTH_LONG).show();
+            System.exit(0);
+        }
     }
 
 //설정한 camera preview에 뿌려주기 시작
@@ -319,13 +341,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     *
-     * @param activity
-     * @param cameraId  Camera.CameraInfo.CAMERA_FACING_FRONT,
-     *                    Camera.CameraInfo.CAMERA_FACING_BACK
-     * @param camera
-     *
-     * Camera Orientation
      * reference by https://developer.android.com/reference/android/hardware/Camera.html
      */
     //카메라 방향 변경 함수

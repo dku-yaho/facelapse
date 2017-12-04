@@ -6,7 +6,6 @@ package com.yaho.facelapse;
 
 import java.io.IOException;
         import java.util.List;
-
         import android.content.Context;
         import android.hardware.Camera;
         import android.hardware.Camera.Size;
@@ -28,14 +27,10 @@ public class Preview extends ViewGroup implements SurfaceHolder.Callback {
 
     Preview(Context context, SurfaceView sv ) {
             super(context);
-
         mSurfaceView = sv;
-//        addView(mSurfaceView);
-
         mHolder = mSurfaceView.getHolder();
         mHolder.addCallback(this);
         mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-
     }
 
     public void setCamera(Camera camera) {
@@ -67,7 +62,6 @@ public class Preview extends ViewGroup implements SurfaceHolder.Callback {
                 // set Camera parameters
                 mCamera.setParameters(params);
             }
-
             try {
                 mCamera.setPreviewDisplay(mHolder);
             } catch (IOException e) {
@@ -78,7 +72,6 @@ public class Preview extends ViewGroup implements SurfaceHolder.Callback {
             // surface. Preview must be started before you can take a picture.
             mCamera.startPreview();
         }
-
     }
 
     @Override
@@ -124,10 +117,8 @@ public class Preview extends ViewGroup implements SurfaceHolder.Callback {
     }
 
     public void surfaceCreated(SurfaceHolder holder) {
-
         //Toast.makeText(getContext(), "surfaceCreated", Toast.LENGTH_LONG).show();
         Log.d( "@@@", "surfaceCreated" );
-
         // The Surface has been created, acquire the camera and tell it where
         // to draw.
         try {
@@ -196,7 +187,5 @@ public class Preview extends ViewGroup implements SurfaceHolder.Callback {
             // Preview must be started before you can take a picture.
             mCamera.startPreview();
         }
-
     }
-
 }

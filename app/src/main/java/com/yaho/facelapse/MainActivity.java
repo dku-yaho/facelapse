@@ -53,17 +53,16 @@ public class MainActivity extends AppCompatActivity {
 
     private final static int PERMISSIONS_REQUEST_CODE = 100;
     // Camera.CameraInfo.CAMERA_FACING_FRONT or Camera.CameraInfo.CAMERA_FACING_BACK
+    //전방 카메라 사용
     private final static int CAMERA_FACING = Camera.CameraInfo.CAMERA_FACING_FRONT;
     private AppCompatActivity mActivity;
 
-
+    //camera 앱 restart함수
     public static void doRestart(Context c) {
-        //http://stackoverflow.com/a/22345538
         try {
-            //check if the context is given
+            //context가 주어졌는지 확인
             if (c != null) {
                 //fetch the packagemanager so we can get the default launch activity
-                // (you can replace this intent with any other activity if you want
                 PackageManager pm = c.getPackageManager();
                 //check if we got the PackageManager
                 if (pm != null) {
@@ -100,35 +99,26 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //camera 시작 - surfaceView에 preview 뿌려주기
     public void startCamera() {
-
+        //prview가 초기화 되지 않은경우
         if ( preview == null ) {
             preview = new Preview(this, (SurfaceView) findViewById(R.id.surfaceView));
             preview.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
                     LayoutParams.MATCH_PARENT));
             ((FrameLayout) findViewById(R.id.layout)).addView(preview);
             preview.setKeepScreenOn(true);
-
-            /* 프리뷰 화면 눌렀을 때  사진을 찍음
-            preview.setOnClickListener(new OnClickListener() {
-
-                @Override
-                public void onClick(View arg0) {
-                    camera.takePicture(shutterCallback, rawCallback, jpegCallback);
-                }
-            });*/
         }
-
+        //오류로 인해 preview가 표지되지 못한 경우
         preview.setCamera(null);
         if (camera != null) {
-            camera.release();
+            camera.release();//release함수를 통해 자원을 반환하여 다른 오류를 막는다
             camera = null;
         }
 
         int numCams = Camera.getNumberOfCameras();
         if (numCams > 0) {
             try {
-
                 camera = Camera.open(CAMERA_FACING);
                 // camera orientation
                 camera.setDisplayOrientation(setCameraDisplayOrientation(this, CAMERA_FACING,
@@ -149,7 +139,19 @@ public class MainActivity extends AppCompatActivity {
         preview.setCamera(camera);
     }
 
+    //listner에 연결된 button이 클릭된 경우 실행되는 함수이다.
+    public void onClick(View v) {
+        if (v.getId() == R.id.buttonselfie) {//selfie 버튼 누른 경우
+            camera.takePicture(shutterCallback, rawCallback, jpegCallback);//camera를 통해 사진을 찍는다
+        }
+        else if (v.getId() == R.id.buttonalbum) { //album버튼 누른 경우
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(
+                    "content://media/internal/images/media"));
+            startActivity(intent);
+        }
+    }
 
+    //api버전에 따라 permission처리 여부 결정
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -165,20 +167,9 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        Button button = (Button)findViewById(R.id.buttonselfie);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                camera.takePicture(shutterCallback, rawCallback, jpegCallback);
-            }
-        });
-
-
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { //API 23 이상이면
                 // 런타임 퍼미션 처리 필요
-
                 int hasCameraPermission = ContextCompat.checkSelfPermission(this,
                         Manifest.permission.CAMERA);
                 int hasWriteExternalStoragePermission =
@@ -200,28 +191,23 @@ public class MainActivity extends AppCompatActivity {
             else{
                 ;
             }
-
-
         } else {
             Toast.makeText(MainActivity.this, "Camera not supported",
                     Toast.LENGTH_LONG).show();
         }
-
-
     }
 
-
+//설정한 camera preview에 뿌려주기 시작
     @Override
     protected void onResume() {
         super.onResume();
-
         startCamera();
     }
 
+    //카메라에서 다른 화면으로 넘어가는 경우 preview제거
     @Override
     protected void onPause() {
         super.onPause();
-
         // Surface will be destroyed when we return, so stop the preview.
         if(camera != null) {
             // Call stopPreview() to stop updating the preview surface
@@ -230,12 +216,11 @@ public class MainActivity extends AppCompatActivity {
             camera.release();
             camera = null;
         }
-
         ((FrameLayout) findViewById(R.id.layout)).removeView(preview);
         preview = null;
-
     }
 
+    //reset해야 하는 경우
     private void resetCam() {
         startCamera();
     }
@@ -274,8 +259,6 @@ public class MainActivity extends AppCompatActivity {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
             Bitmap bitmap = BitmapFactory.decodeByteArray( data, 0, data.length, options);
-            //int w = bitmap.getWidth();
-            //int h = bitmap.getHeight();
 
             //이미지를 디바이스 방향으로 회전
             Matrix matrix = new Matrix();
@@ -296,24 +279,20 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    //DB저장 함수
-    //내부저장소가 작아 DB에 올리는 방향이 사용자에게 사진을 보여주지 않을 방법인듯...
-    //따라서 DB가 완성되면 DB의 특정 파일에 올리고 특정파일에 올릴때마다 global variable증가
-    // global variable이 30이 되면 동영상으로 만드는 함수 실행
+    //찍은 사진 저장
     private class SaveImageTask extends AsyncTask<byte[], Void, Void> {
-
         @Override
         protected Void doInBackground(byte[]... data) {
             int file_num=0;
             FileOutputStream outStream = null;
 
-            // Write to SD Card
             try {
-                File sdCard = Environment.getExternalStorageDirectory();
-                File dir = new File (sdCard.getAbsolutePath() + "/camtest");
-                dir.mkdirs();
+                //File sdCard = Environment.getExternalStorageDirectory();
+                File sdCard = getFilesDir();
+                File dir = new File (sdCard.getAbsolutePath() + "/camtest");//사용자에게 사진이 보이지 않아야 하므로 내부 저장소(camtest디렉토리에)에 저장
+                dir.mkdirs();//camtest라는 디렉토리가 없는 경우 새로 만들고 있는 경우 skip
 
-                String fileName = String.format("%d.jpg", System.currentTimeMillis());
+                String fileName = String.format("%d.jpg", System.currentTimeMillis());//filename은 현재 시간을 받아서 설정
                 File outFile = new File(dir, fileName);
 
                 outStream = new FileOutputStream(outFile);
@@ -323,13 +302,12 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.d(TAG, "onPictureTaken - wrote bytes: " + data.length + " to "
                         + outFile.getAbsolutePath());
-
                 refreshGallery(outFile);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
-            } finally {
+            } finally {//오류가 일어나든 일어나지 않던 무조건 실행 하는 함수
                 file_num++;
                 if(file_num == 30){
                     //동영상 만드는 함수 실행
@@ -338,7 +316,6 @@ public class MainActivity extends AppCompatActivity {
             }
             return null;
         }
-
     }
 
     /**
@@ -351,6 +328,7 @@ public class MainActivity extends AppCompatActivity {
      * Camera Orientation
      * reference by https://developer.android.com/reference/android/hardware/Camera.html
      */
+    //카메라 방향 변경 함수
     public static int setCameraDisplayOrientation(Activity activity,
                                                   int cameraId, android.hardware.Camera camera) {
         android.hardware.Camera.CameraInfo info =
@@ -365,7 +343,6 @@ public class MainActivity extends AppCompatActivity {
             case Surface.ROTATION_180: degrees = 180; break;
             case Surface.ROTATION_270: degrees = 270; break;
         }
-
         int result;
         if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
             result = (info.orientation + degrees) % 360;
@@ -373,19 +350,16 @@ public class MainActivity extends AppCompatActivity {
         } else {  // back-facing
             result = (info.orientation - degrees + 360) % 360;
         }
-
         return result;
     }
 
-
-
+    //카메라 허용 확인 함수
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
                                            @NonNull int[] grandResults) {
 
         if ( requestCode == PERMISSIONS_REQUEST_CODE && grandResults.length > 0) {
-
             int hasCameraPermission = ContextCompat.checkSelfPermission(this,
                     Manifest.permission.CAMERA);
             int hasWriteExternalStoragePermission =
@@ -394,7 +368,6 @@ public class MainActivity extends AppCompatActivity {
 
             if ( hasCameraPermission == PackageManager.PERMISSION_GRANTED
                     && hasWriteExternalStoragePermission == PackageManager.PERMISSION_GRANTED ){
-
                 //이미 퍼미션을 가지고 있음
                 doRestart(this);
             }
@@ -402,7 +375,6 @@ public class MainActivity extends AppCompatActivity {
                 checkPermissions();
             }
         }
-
     }
 
 
@@ -424,13 +396,13 @@ public class MainActivity extends AppCompatActivity {
         if ( (hasCameraPermission == PackageManager.PERMISSION_DENIED && cameraRationale)
                 || (hasWriteExternalStoragePermission== PackageManager.PERMISSION_DENIED
                 && writeExternalStorageRationale))
-            showDialogForPermission("앱을 실행하려면 퍼미션을 허가하셔야합니다.");
+            showDialogForPermission("앱을 실행하려면 퍼미션을 허가해야합니다.");
 
         else if ( (hasCameraPermission == PackageManager.PERMISSION_DENIED && !cameraRationale)
                 || (hasWriteExternalStoragePermission== PackageManager.PERMISSION_DENIED
                 && !writeExternalStorageRationale))
             showDialogForPermissionSetting("퍼미션 거부 + Don't ask again(다시 묻지 않음) " +
-                    "체크 박스를 설정한 경우로 설정에서 퍼미션 허가해야합니다.");
+                    "체크 박스를 설정한 경우로 설정에서 퍼미션을 허가해야합니다.");
 
         else if ( hasCameraPermission == PackageManager.PERMISSION_GRANTED
                 || hasWriteExternalStoragePermission== PackageManager.PERMISSION_GRANTED ) {
@@ -438,10 +410,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+//퍼미션 요청 dialog띄우는 함수
     @TargetApi(Build.VERSION_CODES.M)
     private void showDialogForPermission(String msg) {
-
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setTitle("알림");
         builder.setMessage(msg);
@@ -464,15 +435,14 @@ public class MainActivity extends AppCompatActivity {
         builder.create().show();
     }
 
+    //허용 dialog띄워주는 함수  -> 실제 허용하도록 유도
     private void showDialogForPermissionSetting(String msg) {
-
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setTitle("알림");
         builder.setMessage(msg);
         builder.setCancelable(true);
         builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-
                 Intent myAppSettings = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                         Uri.parse("package:" + mActivity.getPackageName()));
                 myAppSettings.addCategory(Intent.CATEGORY_DEFAULT);
@@ -487,7 +457,4 @@ public class MainActivity extends AppCompatActivity {
         });
         builder.create().show();
     }
-
-
-
 }

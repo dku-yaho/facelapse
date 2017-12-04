@@ -6,12 +6,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.concurrent.ExecutionException;
+
 public class MainActivity extends AppCompatActivity {
 
+    Validate test;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,13 +37,16 @@ public class MainActivity extends AppCompatActivity {
         Typeface font3 = Typeface.createFromAsset(getAssets(), "AmaticSC-Bold.ttf");
         tv3.setTypeface(font3);
 
+        test = new Validate();
+
     }
 
-    public void onClick(View view) {
+    public void onClick(View view) throws ExecutionException, InterruptedException {
         switch (view.getId()){
             case R.id.buttonselfie:
                 // SELFIE 버튼이 눌렸을 때
-                Toast.makeText(this, "SELFIE button clicked", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, test.getServertime(), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, test.getLocaltime(), Toast.LENGTH_LONG).show();
                 break;
             case R.id.buttonalbum:
                 // ALBUM 버튼이 눌렸을 때

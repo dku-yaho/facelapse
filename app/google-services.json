@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "422420184850-e9npogv4rtsla1o0por7i3sbda344qce.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yaho.facelapse",
+            "certificate_hash": "d7672df250911798d8cb395fd57963ae742e0dff"
+          }
+        },
+        {
           "client_id": "422420184850-jt9idemnpg51khkeg309bbd142ciusk7.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "422420184850-jt9idemnpg51khkeg309bbd142ciusk7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

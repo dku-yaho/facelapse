@@ -296,10 +296,15 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    //DB저장 함수
+    //내부저장소가 작아 DB에 올리는 방향이 사용자에게 사진을 보여주지 않을 방법인듯...
+    //따라서 DB가 완성되면 DB의 특정 파일에 올리고 특정파일에 올릴때마다 global variable증가
+    // global variable이 30이 되면 동영상으로 만드는 함수 실행
     private class SaveImageTask extends AsyncTask<byte[], Void, Void> {
 
         @Override
         protected Void doInBackground(byte[]... data) {
+            int file_num=0;
             FileOutputStream outStream = null;
 
             // Write to SD Card
@@ -325,6 +330,11 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
+                file_num++;
+                if(file_num == 30){
+                    //동영상 만드는 함수 실행
+                    //만든후 동영상 외장 메모리에 저장
+                }
             }
             return null;
         }

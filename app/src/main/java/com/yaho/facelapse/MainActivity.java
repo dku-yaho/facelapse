@@ -44,39 +44,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-/*
-public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
-    preview preview;
-    Camera camera;
-    Context ctx;
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_main);
-    }
-
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.buttonselfie:
-                // SELFIE 버튼이 눌렸을 때
-                Toast.makeText(this, "SELFIE button clicked", Toast.LENGTH_LONG).show();
-                break;
-            case R.id.buttonalbum:
-                // ALBUM 버튼이 눌렸을 때
-                Toast.makeText(this, "ALBUM button clicked", Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(getApplicationContext(), ScreenActivity.class);
-                startActivity(intent);
-                break;
-        }
-    }
-
-}
-*/
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     Preview preview;
@@ -85,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final static int PERMISSIONS_REQUEST_CODE = 100;
     // Camera.CameraInfo.CAMERA_FACING_FRONT or Camera.CameraInfo.CAMERA_FACING_BACK
-    private final static int CAMERA_FACING = Camera.CameraInfo.CAMERA_FACING_BACK;
+    private final static int CAMERA_FACING = Camera.CameraInfo.CAMERA_FACING_FRONT;
     private AppCompatActivity mActivity;
 
 
@@ -311,6 +279,8 @@ public class MainActivity extends AppCompatActivity {
 
             //이미지를 디바이스 방향으로 회전
             Matrix matrix = new Matrix();
+            matrix.postRotate(orientation);
+            matrix.postRotate(orientation);
             matrix.postRotate(orientation);
             bitmap =  Bitmap.createBitmap(bitmap, 0, 0, w, h, matrix, true);
 

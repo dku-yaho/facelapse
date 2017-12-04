@@ -17,7 +17,7 @@ import java.io.IOException;
         import android.view.ViewGroup;
 
 
-        public class Preview extends ViewGroup implements SurfaceHolder.Callback {
+public class Preview extends ViewGroup implements SurfaceHolder.Callback {
     private final String TAG = "Preview";
 
     SurfaceView mSurfaceView;
@@ -27,7 +27,7 @@ import java.io.IOException;
     Camera mCamera;
 
     Preview(Context context, SurfaceView sv ) {
-        super(context);
+            super(context);
 
         mSurfaceView = sv;
 //        addView(mSurfaceView);

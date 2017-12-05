@@ -128,7 +128,7 @@ public class SelfieActivity extends AppCompatActivity {
             ((FrameLayout) findViewById(R.id.layout)).addView(preview);
             preview.setKeepScreenOn(true);
         }
-        //오류로 인해 preview가 표지되지 못한 경우
+        //오류로 인해 preview가 표시되지 못한 경우
         preview.setCamera(null);
         if (camera != null) {
             camera.release();//release함수를 통해 자원을 반환하여 다른 오류를 막는다

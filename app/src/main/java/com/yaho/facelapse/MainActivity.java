@@ -154,24 +154,20 @@ public class MainActivity extends AppCompatActivity {
         preview.setCamera(camera);
     }
 
-    //listner에 연결된 button이 클릭된 경우 실행되는 함수이다.
-    public void onClick(View v) {
-        if (v.getId() == R.id.buttonselfie) {//selfie 버튼 누른 경우
-            camera.takePicture(shutterCallback, rawCallback, jpegCallback);//camera를 통해 사진을 찍는다
-        }
-        else if (v.getId() == R.id.buttonalbum) { //album버튼 누른 경우
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(
-                    "content://media/internal/images/media"));
-            startActivity(intent);
-        }
-    }
-
     //api버전에 따라 permission처리 여부 결정
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ctx = this;
         mActivity = this;
+
+        //사진 저장할 공간이 부족한 경우
+        double size = checkInternalAvailableMemory();
+        if(size >80){
+            Toast.makeText(MainActivity.this, "No memory for save image",
+                    Toast.LENGTH_LONG).show();
+            System.exit(0);
+        }
 
         //상태바 없애기
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -182,6 +178,23 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
+        //button 설정
+        Button button = (Button)findViewById(R.id.buttonselfie);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                camera.takePicture(shutterCallback, rawCallback, jpegCallback);
+            }
+        });
+        Button button1 = (Button)findViewById(R.id.buttonalbum);
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(
+                        "content://media/internal/images/media"));
+                startActivity(intent);
+            }
+        });
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { //API 23 이상이면
                 // 런타임 퍼미션 처리 필요
@@ -210,13 +223,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "Camera not supported",
                     Toast.LENGTH_LONG).show();
         }
-        //사진 저장할 공간이 부족한 경우
-        double size = checkInternalAvailableMemory();
-        if(size >80){
-            Toast.makeText(MainActivity.this, "No memory for save image",
-                    Toast.LENGTH_LONG).show();
-            System.exit(0);
-        }
+
     }
 
 //설정한 camera preview에 뿌려주기 시작

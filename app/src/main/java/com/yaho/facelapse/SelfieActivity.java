@@ -187,7 +187,6 @@ public class SelfieActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 int i = 0;
                 i = CheckTodayPhotoNum();//하루에 한개만 찍게 하기 위한 조건
                 //int i=0;

@@ -16,7 +16,6 @@
         android:layout_weight="1"
         android:text="Face Lapse"
         android:textAlignment="center"
-        android:textColor="@color/common_google_signin_btn_text_light_default"
         android:textSize="100sp"
         android:layout_marginTop="50dp"
         android:textStyle="bold" />

@@ -69,8 +69,7 @@ public class MainActivity extends AppCompatActivity {
         long availableSize = stat.getAvailableBlocksLong() * blockSize;
         //사용량
         DecimalFormat df = new DecimalFormat("#,###");
-        double storage = 100.0*(totalSize-availableSize)/totalSize;
-        return storage;
+        return  100.0*(totalSize-availableSize)/totalSize;
     }
 
 
@@ -211,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if ( hasCameraPermission == PackageManager.PERMISSION_GRANTED
                         && hasWriteExternalStoragePermission==PackageManager.PERMISSION_GRANTED){
-                    ;//이미 퍼미션을 가지고 있음
+                    //이미 퍼미션을 가지고 있음
                 }
                 else {
                     //퍼미션 요청
@@ -222,7 +221,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             else{
-                ;
             }
         } else {
             Toast.makeText(MainActivity.this, "Camera not supported",

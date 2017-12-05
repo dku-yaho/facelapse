@@ -22,6 +22,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     Camera camera;
     Context ctx;
     private final static int PERMISSIONS_REQUEST_CODE = 100;
+    private final static int REQUEST_TAKE_ALBUM = 2002;
     // Camera.CameraInfo.CAMERA_FACING_FRONT or Camera.CameraInfo.CAMERA_FACING_BACK
     //전방 카메라 사용
     private final static int CAMERA_FACING = Camera.CameraInfo.CAMERA_FACING_FRONT;
@@ -190,9 +192,9 @@ public class MainActivity extends AppCompatActivity {
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(
-                        "content://media/internal/images/media"));
-                startActivity(intent);
+               Intent intent = new Intent(Intent.ACTION_PICK);
+               intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+               startActivityForResult(intent, REQUEST_TAKE_ALBUM);
             }
         });
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {

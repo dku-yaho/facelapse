@@ -2,6 +2,7 @@ package com.yaho.facelapse;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,7 +13,7 @@ import android.widget.Toast;
 import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
-    Validate test;
+    Validate validate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,17 +37,25 @@ public class MainActivity extends AppCompatActivity {
         Typeface font3 = Typeface.createFromAsset(getAssets(), "AmaticSC-Bold.ttf");
         tv3.setTypeface(font3);
 
-        test = new Validate();
+        validate = new Validate();
+        if(validate.validateTime() == false){
+            Toast.makeText(this, "Time Invalid", Toast.LENGTH_LONG).show();
 
+            new Handler().postDelayed(new Runnable(){
+                @Override
+                public void run() {
+                    MainActivity.this.finish();
+                }
+            }, 100);
+        }
     }
 
     public void onClick(View view) throws ExecutionException, InterruptedException {
         switch (view.getId()){
             case R.id.buttonselfie:
                 // SELFIE 버튼이 눌렸을 때
-                Toast.makeText(this, "SELFIE button clicked", Toast.LENGTH_LONG).show();
-                Intent intent2 = new Intent(getApplicationContext(), SelfieActivity.class);
-                startActivity(intent2);
+                Intent selfieintent = new Intent(getApplicationContext(), SelfieActivity.class);
+                startActivity(selfieintent);
                 break;
             case R.id.buttonalbum:
                 // ALBUM 버튼이 눌렸을 때

@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutionException;
 public class Validate {
     long servertime;
     long localtime;
+    private static final String TAG = "Validate";
 
     public void setServertime() throws ExecutionException, InterruptedException {
         this.servertime = new ServerTime().execute().get();
@@ -40,8 +41,18 @@ public class Validate {
 
     private String returnString(long time){
         Date current = new Date(time);
-        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd");
         return transFormat.format(current);
+    }
+
+    public boolean validateTime(){
+        if (!getLocaltime().equals(getServertime())){
+            Log.e(TAG,"Time Validation Error");
+            return false;
+        } else {
+            Log.e(TAG, "Time Validation Success");
+            return true;
+        }
     }
 
 }

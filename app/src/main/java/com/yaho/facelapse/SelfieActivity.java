@@ -198,16 +198,6 @@ public class SelfieActivity extends AppCompatActivity {
                 }
             }
         });
-        //button 설정 - album으로 연결
-        Button button1 = (Button)findViewById(R.id.buttonalbum);
-        button1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri uri = Uri.parse("content://media/internal/images/media");
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-            }
-        });
 
         //api level에 맞게 카메라저장소 사용 permission받기
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {

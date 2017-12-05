@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -62,7 +63,8 @@ public class MainActivity extends AppCompatActivity {
             case R.id.buttonalbum:
                 // ALBUM 버튼이 눌렸을 때
                 Toast.makeText(this, "ALBUM button clicked", Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(getApplicationContext(), ScreenActivity.class);
+                Uri uri = Uri.parse("content://media/internal/images/media");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
                 break;
             case R.id.buttonmanual:

@@ -178,7 +178,7 @@ public class SelfieActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activitiy_selfie);
 
         //button 설정 - 사진 찍기
         Button button = (Button)findViewById(R.id.buttonselfie);

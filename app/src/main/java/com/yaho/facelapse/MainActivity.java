@@ -44,8 +44,9 @@ public class MainActivity extends AppCompatActivity {
         switch (view.getId()){
             case R.id.buttonselfie:
                 // SELFIE 버튼이 눌렸을 때
-                Toast.makeText(this, test.getServertime(), Toast.LENGTH_LONG).show();
-                Toast.makeText(this, test.getLocaltime(), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "SELFIE button clicked", Toast.LENGTH_LONG).show();
+                Intent intent2 = new Intent(getApplicationContext(), SelfieActivity.class);
+                startActivity(intent2);
                 break;
             case R.id.buttonalbum:
                 // ALBUM 버튼이 눌렸을 때

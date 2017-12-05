@@ -1,7 +1,9 @@
 package com.yaho.facelapse;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,6 +16,7 @@ import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
     Validate validate;
+    boolean check;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,17 +40,16 @@ public class MainActivity extends AppCompatActivity {
         Typeface font3 = Typeface.createFromAsset(getAssets(), "AmaticSC-Bold.ttf");
         tv3.setTypeface(font3);
 
-        validate = new Validate();
-        if(validate.validateTime() == false){
-            Toast.makeText(this, "Time Invalid", Toast.LENGTH_LONG).show();
+        validate = new Validate(this);
 
-            new Handler().postDelayed(new Runnable(){
-                @Override
-                public void run() {
-                    MainActivity.this.finish();
-                }
-            }, 100);
+        if(!validate.isNetworkConnected()){
+            endActivity("Check your network");
         }
+        if(!validate.validateTime()){
+            endActivity("Time Invalid. Adjust your local time");
+        }
+
+
     }
 
     public void onClick(View view) throws ExecutionException, InterruptedException {
@@ -69,4 +71,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void endActivity(String str){
+        Toast.makeText(this, str, Toast.LENGTH_LONG).show();
+
+        new Handler().postDelayed(new Runnable(){
+            @Override
+            public void run() {
+                MainActivity.this.finish();
+            }
+        }, 100);
+    }
 }

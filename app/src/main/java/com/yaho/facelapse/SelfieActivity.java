@@ -193,7 +193,9 @@ public class SelfieActivity extends AppCompatActivity {
                 if(i==0) {
                     camera.takePicture(shutterCallback, rawCallback, jpegCallback);
                 }
-                else{}
+                else{
+                    SelfieActivity.this.finish();
+                }
             }
         });
         //button 설정 - album으로 연결

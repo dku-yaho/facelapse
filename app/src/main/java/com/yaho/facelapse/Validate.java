@@ -1,15 +1,23 @@
 package com.yaho.facelapse;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.util.Log;
 
+import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 public class Validate {
-    long servertime;
-    long localtime;
+    Context mContext;
+    long servertime = 0;
+    long localtime = 0;
     private static final String TAG = "Validate";
+
+    public Validate(Context mContext){
+        this.mContext = mContext;
+    }
 
     public void setServertime() throws ExecutionException, InterruptedException {
         this.servertime = new ServerTime().execute().get();
@@ -55,4 +63,8 @@ public class Validate {
         }
     }
 
+    public boolean isNetworkConnected() {
+        ConnectivityManager connect = (ConnectivityManager)this.mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return connect.getActiveNetworkInfo() != null;
+    }
 }

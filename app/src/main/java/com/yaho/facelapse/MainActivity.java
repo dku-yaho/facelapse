@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        //button 설정
+        //button 설정 - 사진 찍기
         Button button = (Button)findViewById(R.id.buttonselfie);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -188,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
                 camera.takePicture(shutterCallback, rawCallback, jpegCallback);
             }
         });
+        //button 설정 - album으로 연결
         Button button1 = (Button)findViewById(R.id.buttonalbum);
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -197,6 +198,8 @@ public class MainActivity extends AppCompatActivity {
                startActivityForResult(intent, REQUEST_TAKE_ALBUM);
             }
         });
+
+        //api level에 맞게 카메라저장소 사용 permission받기
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { //API 23 이상이면
                 // 런타임 퍼미션 처리 필요
@@ -225,10 +228,9 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "Camera not supported",
                     Toast.LENGTH_LONG).show();
         }
-
     }
 
-//설정한 camera preview에 뿌려주기 시작
+    //설정한 camera preview에 뿌려주기 시작
     @Override
     protected void onResume() {
         super.onResume();

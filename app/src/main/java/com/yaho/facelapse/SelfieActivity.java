@@ -47,6 +47,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class SelfieActivity extends AppCompatActivity {
     private static final String TAG = "SelfieActivity";
@@ -185,7 +187,14 @@ public class SelfieActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                camera.takePicture(shutterCallback, rawCallback, jpegCallback);
+
+                int i = 0;
+                i = CheckTodayPhotoNum();//하루에 한개만 찍게 하기 위한 조건
+                //int i=0;
+                if(i==0) {
+                    camera.takePicture(shutterCallback, rawCallback, jpegCallback);
+                }
+                else{}
             }
         });
         //button 설정 - album으로 연결
@@ -193,9 +202,9 @@ public class SelfieActivity extends AppCompatActivity {
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
-                startActivityForResult(intent, REQUEST_TAKE_ALBUM);
+                Uri uri = Uri.parse("content://media/internal/images/media");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
             }
         });
 
@@ -312,6 +321,41 @@ public class SelfieActivity extends AppCompatActivity {
         }
     };
 
+    //하루에 찍은 사진 개수 check
+    private int CheckTodayPhotoNum(){
+        File sdCard = getFilesDir();
+        File dirFile = new File (sdCard.getAbsolutePath() + "/camtest");
+        //디렉토리가 존재하지 않는 경우
+        if(dirFile.exists()==false){
+            return 0;
+        }
+        //디렉토리가 존재하면서 파일 유무 확인
+        File []fileList=dirFile.listFiles();
+        for(File tempFile : fileList) {
+            if(tempFile.isFile()) {//파일이 있는 경우
+                String tempPath=tempFile.getParent();
+                String tempFileName=tempFile.getName();
+                //System.out.println("FileName="+tempFileName);
+                Date date = new Date(System.currentTimeMillis());
+                SimpleDateFormat dateFormat =
+                        new SimpleDateFormat("yyyy-MM-dd");
+                String fileName = dateFormat.format(date) + ".jpg";
+               // Toast.makeText(SelfieActivity.this, "file name = "+fileName+i+tempFileName,
+                 //       Toast.LENGTH_LONG).show();
+
+                if(tempFileName.equals(fileName)){//오늘 파일이 이미 만들어 진 경우 1 return
+                    Toast.makeText(SelfieActivity.this, "Already take photo for today",
+                            Toast.LENGTH_LONG).show();
+                    return 1;
+                }
+                else{//오늘 파일이 만들어지지 않은 경우
+                    Toast.makeText(SelfieActivity.this, "take photo",
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+        return 0;//오늘 파일이 만들어지지 않은 경우 0 return
+    }
     //찍은 사진 저장
     private class SaveImageTask extends AsyncTask<byte[], Void, Void> {
         @Override
@@ -325,7 +369,11 @@ public class SelfieActivity extends AppCompatActivity {
                 File dir = new File (sdCard.getAbsolutePath() + "/camtest");//사용자에게 사진이 보이지 않아야 하므로 내부 저장소(camtest디렉토리에)에 저장
                 dir.mkdirs();//camtest라는 디렉토리가 없는 경우 새로 만들고 있는 경우 skip
 
-                String fileName = String.format("%d.jpg", System.currentTimeMillis());//filename은 현재 시간을 받아서 설정
+                Date date = new Date(System.currentTimeMillis());
+                SimpleDateFormat dateFormat =
+                        new SimpleDateFormat("yyyy-MM-dd");
+                String fileName = dateFormat.format(date) + ".jpg";
+                // String fileName = String.format("%d.jpg", System.currentTimeMillis());//filename은 현재 시간을 받아서 설정
                 File outFile = new File(dir, fileName);
 
                 outStream = new FileOutputStream(outFile);

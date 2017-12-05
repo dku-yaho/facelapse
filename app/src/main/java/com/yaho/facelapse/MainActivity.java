@@ -12,7 +12,6 @@ import android.widget.Toast;
 import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
-
     Validate test;
 
     @Override

@@ -335,7 +335,7 @@ public class SelfieActivity extends AppCompatActivity {
                // Toast.makeText(SelfieActivity.this, "file name = "+fileName+i+tempFileName,
                  //       Toast.LENGTH_LONG).show();
 
-                if(tempFileName.equals(fileName)){//오늘 파일이 이미 만들어 진 경우
+                if(tempFileName.equals(fileName)){//오늘 파일이 이미 만들어 진 경우 1 return
                     Toast.makeText(SelfieActivity.this, "Already take photo for today",
                             Toast.LENGTH_LONG).show();
                     return 1;

@@ -41,8 +41,10 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -147,7 +149,6 @@ public class SelfieActivity extends AppCompatActivity {
                 // picture image orientation
                 params.setRotation(setCameraDisplayOrientation(this, CAMERA_FACING, camera));
                 camera.startPreview();
-
             } catch (RuntimeException ex) {
                 Toast.makeText(ctx, "camera_not_found " + ex.getMessage().toString(),
                         Toast.LENGTH_LONG).show();
@@ -326,10 +327,11 @@ public class SelfieActivity extends AppCompatActivity {
              if(tempFile.isFile()) {//파일이 있는 경우
                 String tempPath=tempFile.getParent();
                 String tempFileName=tempFile.getName();
+                Log.e(TAG, "File Found: "+tempPath+"/"+tempFileName);
                 //System.out.println("FileName="+tempFileName);
                 Date date = new Date(System.currentTimeMillis());
                 SimpleDateFormat dateFormat =
-                        //new SimpleDateFormat("yyyy-MM-dd HH.mm");//데모버전 매분마다 사진찍기 가능
+                        //new SimpleDateFormat("yyyy-MM-dd HH.mm.ss");//데모버전 매분마다 사진찍기 가능
                         new SimpleDateFormat("yyyy-MM-dd");
                 String fileName = dateFormat.format(date) + ".jpg";
                // Toast.makeText(SelfieActivity.this, "file name = "+fileName+i+tempFileName,
@@ -370,8 +372,8 @@ public class SelfieActivity extends AppCompatActivity {
 
                 Date date = new Date(System.currentTimeMillis());
                 SimpleDateFormat dateFormat =
-                        //new SimpleDateFormat("yyyy-MM-dd HH.mm");//데모 버전
-                        new SimpleDateFormat("yyyy-MM-dd");
+                        new SimpleDateFormat("yyyy-MM-dd HH.mm");//데모 버전
+                        //new SimpleDateFormat("yyyy-MM-dd");
                 String fileName = dateFormat.format(date) + ".jpg";
                 // String fileName = String.format("%d.jpg", System.currentTimeMillis());//filename은 현재 시간을 받아서 설정
                 File outFile = new File(dir, fileName);
@@ -393,12 +395,99 @@ public class SelfieActivity extends AppCompatActivity {
                 if(file_num == 30){
 
                 }
+
+               /* if(file_num == 5){
+                    File sdCard = getFilesDir();
+                    File dirFile = new File (sdCard.getAbsolutePath() + "/camtest");
+                    File []fileList=dirFile.listFiles();
+                    for(File tempFile : fileList) {
+                        if (tempFile.isFile()) {//파일이 있는 경우
+                            int size = (int) tempFile.length();
+                            byte[] bytes = new byte[size];
+                            try {
+                                BufferedInputStream buf = new BufferedInputStream(new FileInputStream(tempFile));
+                                buf.read(bytes, 0, bytes.length);
+                                buf.close();
+                            } catch (FileNotFoundException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+                            try {
+                                File sdCard1 = Environment.getExternalStorageDirectory();
+                                //File sdCard = getFilesDir();
+                                File dir = new File (sdCard1.getAbsolutePath() + "/camtest");//사용자에게 사진이 보이지 않아야 하므로 내부 저장소(camtest디렉토리에)에 저장
+                                dir.mkdirs();//camtest라는 디렉토리가 없는 경우 새로 만들고 있는 경우 skip
+
+                                Date date = new Date(System.currentTimeMillis());
+                                SimpleDateFormat dateFormat =
+                                        //new SimpleDateFormat("yyyy-MM-dd HH.mm");//데모 버전
+                                        new SimpleDateFormat("yyyy-MM-dd");
+                                String fileName = dateFormat.format(date) + ".jpg";
+                                // String fileName = String.format("%d.jpg", System.currentTimeMillis());//filename은 현재 시간을 받아서 설정
+                                File outFile = new File(dir, fileName);
+
+                                outStream = new FileOutputStream(outFile);
+                                outStream.write(bytes[0]);
+                                outStream.flush();
+                                outStream.close();
+
+                                Log.d(TAG, "onPictureTaken - wrote bytes: " + data.length + " to "
+                                        + outFile.getAbsolutePath());
+                                refreshGallery(outFile);
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            //tempFile.delete();
+                        }
+                    }
+                }*/
             }
 
             return null;
         }
     }
+    private class SaveImageTasktoEx extends AsyncTask<byte[], Void, Void> {
+        @Override
+        protected Void doInBackground(byte[]... data) {
+            int file_num=0;
+            FileOutputStream outStream = null;
 
+            try {
+                //File sdCard = Environment.getExternalStorageDirectory();
+                File sdCard = getFilesDir();
+                File dir = new File (sdCard.getAbsolutePath() + "/camtest");//사용자에게 사진이 보이지 않아야 하므로 내부 저장소(camtest디렉토리에)에 저장
+                dir.mkdirs();//camtest라는 디렉토리가 없는 경우 새로 만들고 있는 경우 skip
+
+                Date date = new Date(System.currentTimeMillis());
+                SimpleDateFormat dateFormat =
+                        //new SimpleDateFormat("yyyy-MM-dd HH.mm");//데모 버전
+                        new SimpleDateFormat("yyyy-MM-dd");
+                String fileName = dateFormat.format(date) + ".jpg";
+                // String fileName = String.format("%d.jpg", System.currentTimeMillis());//filename은 현재 시간을 받아서 설정
+                File outFile = new File(dir, fileName);
+
+                outStream = new FileOutputStream(outFile);
+                outStream.write(data[0]);
+                outStream.flush();
+                outStream.close();
+
+                Log.d(TAG, "onPictureTaken - wrote bytes: " + data.length + " to "
+                        + outFile.getAbsolutePath());
+                refreshGallery(outFile);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {//오류가 일어나든 일어나지 않던 무조건 실행 하는 함수
+            }
+            return null;
+        }
+    }
     /**
      * reference by https://developer.android.com/reference/android/hardware/Camera.html
      */

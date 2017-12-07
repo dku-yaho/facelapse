@@ -1,39 +1,68 @@
 package com.yaho.facelapse;
 
-import org.jcodec.api.awt.AWTSequenceEncoder;
-import org.jcodec.common.NIOUtils;
-import org.jcodec.common.SeekableByteChannel;
+import android.content.ContextWrapper;
+import org.jcodec.api.SequenceEncoder;
+import org.jcodec.api.android.AndroidSequenceEncoder;
+import org.jcodec.common.io.NIOUtils;
+import org.jcodec.common.io.SeekableByteChannel;
+import org.jcodec.common.model.Rational;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+
 
 public class Video extends FileHandler implements FileOperation {
 
-    public static void main(String[] args) throws IOException {
+    final String TAG = "Video";
+    Context context;
+    static File[] pictures;
 
+    public Video(Context context) {
+        this.context = context;
+    }
+
+    public void genVid() {
+        File sdCard = context.getFilesDir();
+        File savePoint = Environment.getExternalStorageDirectory();
+
+        final int FRAMES = 10;
         SeekableByteChannel out = null;
-        try {
+        AndroidSequenceEncoder encoder;
+        try{
+            Log.e(TAG, "Entry");
+            File dirFile = new File (sdCard.getAbsolutePath() + "/camtest");
+            File[] fileList = dirFile.listFiles();
 
-            out = NIOUtils.writableFileChannel("/tmp/output.mp4"); // ?
+            out = NIOUtils.writableFileChannel(savePoint+"/Test.mp4");
+            Log.e(TAG, "Saving Point: "+savePoint+"/Test.mp4");
+            encoder = new AndroidSequenceEncoder(out, Rational.R(25, 1));
 
-            // AndroidSequenceEncoder
-            AWTSequenceEncoder encoder = new AWTSequenceEncoder(new File(".mp4"));
+            for (File tempFile : fileList) {
+                String tempPath = tempFile.getParent();
+                String tempFileName = tempFile.getName();
+                Log.e(TAG, "File Found: " + tempPath + "/" + tempFileName);
 
-            int numOfFrames = 30;
-            for (int i = 1; i<numOfFrames; i++) {
-
-                // Generate the image
-                BufferedImage image = ImageIO.read(new File(""));
-
-                // Encode the image
-                encoder.encodeImage(image);
+                for(int i = 1; i < FRAMES; i++){
+                    Bitmap image = BitmapFactory.decodeFile(tempPath+"/"+tempFileName);
+                    encoder.encodeImage(image);
+                    Log.e(TAG, "Encoded: " + tempPath + "/" + tempFileName);
+                }
             }
-
-            // Finalize the encoding
             encoder.finish();
-
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
-            NIOUtils.closeQuietly(out); // ?
+            NIOUtils.closeQuietly(out);
         }
     }
 }

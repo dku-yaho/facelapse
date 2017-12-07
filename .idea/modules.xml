@@ -3,9 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\Users\qoren\StudioProjects\facelapse\app\app.iml" filepath="C:\Users\qoren\StudioProjects\facelapse\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/facelapse.iml" filepath="$PROJECT_DIR$/.idea/facelapse.iml" />
-      <module fileurl="file://C:\Users\qoren\StudioProjects\facelapse\.idea\facelapse.iml" filepath="C:\Users\qoren\StudioProjects\facelapse\.idea\facelapse.iml" />
     </modules>
   </component>
 </project>

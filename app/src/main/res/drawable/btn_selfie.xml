@@ -4,13 +4,13 @@
     <!-- 평상시 상태 -->
     <item
         android:state_pressed="false"
-        android:drawable="@drawable/ic_btn_s"
+        android:drawable="@drawable/ic_s_new"
         />
 
     <!-- 버튼이 눌렸을 때 -->
     <item
         android:state_pressed="true"
-        android:drawable="@drawable/ic_btn_s_clicked"
+        android:drawable="@drawable/ic_s_new2"
         />
 
 </selector>

@@ -1,5 +1,6 @@
 package com.yaho.facelapse;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -21,6 +22,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.os.StatFs;
 import android.provider.MediaStore;
 import android.provider.Settings;
@@ -408,8 +411,48 @@ public class SelfieActivity extends AppCompatActivity {
                 file_num++;
                 if(file_num == 30){
 
-                }
+                    /**
+                     * < If 찍은 사진이 30번째 사진,
+                     *   인코딩하는 동시에 띄울 ProgressDialog >
+                     *
+                     * 이 if(file_num == 30) 안에 넣은게 모두 새로 추가한 거구여
+                     * 이 Activity에 넣는게 맞는지도 모르겠구여
+                     * 진행정도를 나타내는 thread 부분을 모르겠습니다 ;ㅇ;
+                     */
+                    final ProgressDialog dialog = new ProgressDialog(SelfieActivity.this);
+                    //dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL); // 바 형태의 Progress Dialog
+                    dialog.setMax(100);
+                    dialog.setMessage("Making video for you :)");
+                    dialog.show();          // ProgressDialog 보여줌
 
+                    //dialog.setProgress(); // 스레드 사용해서 Thread 진행정도 나타내는 부분
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                while (dialog.getProgress() <= dialog.getMax()) {
+                                    Thread.sleep(200);
+                                    handle.sendMessage(handle.obtainMessage());
+
+                                    if (dialog.getProgress() == dialog.getMax()) {
+                                        dialog.dismiss(); // 전부 진행시 Dialog 창 내리고
+                                        // 메인화면으로 가던지, 갤러리로 가던지, 파일을 열어주던지
+                                    }
+                                }
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        Handler handle = new Handler() {
+                            @Override
+                            public void handleMessage(Message msg) {
+                                super.handleMessage(msg);
+                                dialog.incrementProgressBy(1);
+                            }
+                        };
+                    }).start();
+
+                }
 
 
                /* if(file_num == 5){
@@ -464,9 +507,11 @@ public class SelfieActivity extends AppCompatActivity {
                 }*/
             }
             progressBar.setProgress(file_num);
+
             return null;
         }
     }
+
     private class SaveImageTasktoEx extends AsyncTask<byte[], Void, Void> {
         @Override
         protected Void doInBackground(byte[]... data) {

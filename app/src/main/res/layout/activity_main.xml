@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/bg_fl_c"
+    android:background="@drawable/bg_main_snow"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:baselineAligned="false"
@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_weight="1"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="90dp"
         android:text="Face Lapse"
         android:textAlignment="center"
         android:textSize="100sp" />
@@ -22,32 +22,32 @@
     <Button
         android:id="@+id/buttonselfie"
         android:layout_width="match_parent"
-        android:layout_height="130dp"
+        android:layout_height="140dp"
         android:layout_weight="1"
-        android:background="@drawable/btn_selfie"
+        android:background="@drawable/ic_s_new"
         android:gravity="center"
         android:onClick="onClick" />
 
     <Button
         android:id="@+id/buttonalbum"
         android:layout_width="match_parent"
-        android:layout_height="130dp"
+        android:layout_height="140dp"
         android:layout_weight="1"
-        android:layout_marginBottom="100dp"
-        android:background="@drawable/btn_album"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/ic_a_new"
         android:gravity="center"
         android:onClick="onClick" />
 
     <Button
         android:id="@+id/buttonmanual"
         android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_height="150dp"
         android:layout_gravity="center_vertical|center_horizontal"
         android:layout_marginBottom="10dp"
         android:layout_weight="1"
         android:gravity="center"
         android:onClick="onClick"
         android:textSize="20sp"
-        android:background="@drawable/ic_q_g" />
+        android:background="@drawable/bg_main_q" />
 
 </LinearLayout>

@@ -149,7 +149,6 @@ public class SelfieActivity extends AppCompatActivity {
                 // picture image orientation
                 params.setRotation(setCameraDisplayOrientation(this, CAMERA_FACING, camera));
                 camera.startPreview();
-
             } catch (RuntimeException ex) {
                 Toast.makeText(ctx, "camera_not_found " + ex.getMessage().toString(),
                         Toast.LENGTH_LONG).show();
@@ -328,6 +327,7 @@ public class SelfieActivity extends AppCompatActivity {
             if(tempFile.isFile()) {//파일이 있는 경우
                 String tempPath=tempFile.getParent();
                 String tempFileName=tempFile.getName();
+                Log.e(TAG, "File Found: "+tempPath+"/"+tempFileName);
                 //System.out.println("FileName="+tempFileName);
                 Date date = new Date(System.currentTimeMillis());
                 SimpleDateFormat dateFormat =
@@ -365,8 +365,8 @@ public class SelfieActivity extends AppCompatActivity {
 
                 Date date = new Date(System.currentTimeMillis());
                 SimpleDateFormat dateFormat =
-                        //new SimpleDateFormat("yyyy-MM-dd HH.mm");//데모 버전
-                        new SimpleDateFormat("yyyy-MM-dd");
+                        new SimpleDateFormat("yyyy-MM-dd HH.mm");//데모 버전
+                        //new SimpleDateFormat("yyyy-MM-dd");
                 String fileName = dateFormat.format(date) + ".jpg";
                 // String fileName = String.format("%d.jpg", System.currentTimeMillis());//filename은 현재 시간을 받아서 설정
                 File outFile = new File(dir, fileName);

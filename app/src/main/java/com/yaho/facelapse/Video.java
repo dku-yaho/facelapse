@@ -1,7 +1,5 @@
 package com.yaho.facelapse;
 
-import android.content.ContextWrapper;
-import org.jcodec.api.SequenceEncoder;
 import org.jcodec.api.android.AndroidSequenceEncoder;
 import org.jcodec.common.io.NIOUtils;
 import org.jcodec.common.io.SeekableByteChannel;
@@ -11,7 +9,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 
 import java.io.File;
@@ -31,7 +28,12 @@ public class Video extends FileHandler implements FileOperation {
 
     public void genVid() {
         File sdCard = context.getFilesDir();
-        File savePoint = Environment.getExternalStorageDirectory();
+        File targetStorage = new File(Environment.getExternalStorageDirectory() + "/Facelapse");
+
+        if(!targetStorage.exists()){
+            targetStorage.mkdir();
+            Log.e(TAG, "Facelapse folder created");
+        }
 
         final int FRAMES = 10;
         SeekableByteChannel out = null;
@@ -41,17 +43,19 @@ public class Video extends FileHandler implements FileOperation {
             File dirFile = new File (sdCard.getAbsolutePath() + "/camtest");
             File[] fileList = dirFile.listFiles();
 
-            out = NIOUtils.writableFileChannel(savePoint+"/Test.mp4");
-            Log.e(TAG, "Saving Point: "+savePoint+"/Test.mp4");
+            String savePoint = new String(targetStorage.toString()+"/"+System.currentTimeMillis()+".mp4");
+            out = NIOUtils.writableFileChannel(savePoint);
+            Log.e(TAG, "Saving Point: "+savePoint);
             encoder = new AndroidSequenceEncoder(out, Rational.R(25, 1));
 
             for (File tempFile : fileList) {
                 String tempPath = tempFile.getParent();
                 String tempFileName = tempFile.getName();
+
                 Log.e(TAG, "File Found: " + tempPath + "/" + tempFileName);
+                Bitmap image = BitmapFactory.decodeFile(tempPath+"/"+tempFileName);
 
                 for(int i = 1; i < FRAMES; i++){
-                    Bitmap image = BitmapFactory.decodeFile(tempPath+"/"+tempFileName);
                     encoder.encodeImage(image);
                     Log.e(TAG, "Encoded: " + tempPath + "/" + tempFileName);
                 }

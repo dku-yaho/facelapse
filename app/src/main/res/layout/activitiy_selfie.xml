@@ -25,9 +25,27 @@
             android:paddingLeft="60dp"
             android:paddingRight="60dp"
             android:paddingTop="30dp"
-            android:src="@drawable/faceline" />
+            android:src="@drawable/faceline"
+            android:visibility="visible" />
 
     </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="@style/MyProgressBar"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_gravity="center|bottom"
+            android:layout_marginBottom="50dp"
+            android:max="30"/>
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,12 +54,12 @@
 
         <Button
             android:id="@+id/buttonselfie"
+            android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:layout_gravity="center|bottom"
             android:layout_marginBottom="1dp"
             android:layout_weight="1"
-            android:text="SELFIE"
-            android:layout_width="wrap_content" />
+            android:text="SELFIE" />
 
     </LinearLayout>
 

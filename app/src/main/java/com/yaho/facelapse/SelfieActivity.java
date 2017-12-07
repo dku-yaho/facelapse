@@ -39,6 +39,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.io.BufferedInputStream;
@@ -63,6 +64,7 @@ public class SelfieActivity extends AppCompatActivity {
     //전방 카메라 사용
     private final static int CAMERA_FACING = Camera.CameraInfo.CAMERA_FACING_FRONT;
     private AppCompatActivity mActivity;
+    private ProgressBar progressBar;
 
     //내부저장소에 여유 공간 확인
     private double checkInternalAvailableMemory() {
@@ -199,6 +201,18 @@ public class SelfieActivity extends AppCompatActivity {
                 }
             }
         });
+
+        int count = 0;
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        File sdCard = getFilesDir();
+        File dir = new File (sdCard.getAbsolutePath() + "/camtest");//사용자에게 사진이 보이지 않아야 하므로 내부 저장소(camtest디렉토리에)에 저장
+        File[] fileList = dir.listFiles();
+
+        for (File tempFile : fileList) {
+            count++;
+        }
+        Log.e(TAG, "Progressbar set to:"+Integer.toString(count)+"/30");
+        progressBar.setProgress(count);
 
         //api level에 맞게 카메라저장소 사용 permission받기
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
@@ -396,6 +410,8 @@ public class SelfieActivity extends AppCompatActivity {
 
                 }
 
+
+
                /* if(file_num == 5){
                     File sdCard = getFilesDir();
                     File dirFile = new File (sdCard.getAbsolutePath() + "/camtest");
@@ -447,7 +463,7 @@ public class SelfieActivity extends AppCompatActivity {
                     }
                 }*/
             }
-
+            progressBar.setProgress(file_num);
             return null;
         }
     }

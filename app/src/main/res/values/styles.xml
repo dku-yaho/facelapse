@@ -15,4 +15,8 @@
         <item name="android:windowCloseOnTouchOutside">true</item>
     </style>
 
+    <style name="MyProgressBar" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:progressBackgroundTint">#69f0ae</item>
+    </style>
+
 </resources>

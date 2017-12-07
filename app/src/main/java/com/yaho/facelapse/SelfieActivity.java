@@ -324,7 +324,7 @@ public class SelfieActivity extends AppCompatActivity {
         //디렉토리가 존재하면서 파일 유무 확인
         File []fileList=dirFile.listFiles();
         for(File tempFile : fileList) {
-            if(tempFile.isFile()) {//파일이 있는 경우
+             if(tempFile.isFile()) {//파일이 있는 경우
                 String tempPath=tempFile.getParent();
                 String tempFileName=tempFile.getName();
                 Log.e(TAG, "File Found: "+tempPath+"/"+tempFileName);
@@ -340,6 +340,9 @@ public class SelfieActivity extends AppCompatActivity {
                 if(tempFileName.equals(fileName)){//오늘 파일이 이미 만들어 진 경우 1 return
                     Toast.makeText(SelfieActivity.this, "Already take photo for today",
                             Toast.LENGTH_LONG).show();
+                    Video test = new Video(ctx);
+                    test.genVid();
+
                     return 1;
                 }
                 /*else{//오늘 파일이 만들어지지 않은 경우
@@ -348,6 +351,10 @@ public class SelfieActivity extends AppCompatActivity {
                 }*/
             }
         }
+
+        Video test = new Video(ctx);
+        test.genVid();
+
         return 0;//오늘 파일이 만들어지지 않은 경우 0 return
     }
     //찍은 사진 저장
@@ -385,6 +392,10 @@ public class SelfieActivity extends AppCompatActivity {
                 e.printStackTrace();
             } finally {//오류가 일어나든 일어나지 않던 무조건 실행 하는 함수
                 file_num++;
+                if(file_num == 30){
+
+                }
+
                /* if(file_num == 5){
                     File sdCard = getFilesDir();
                     File dirFile = new File (sdCard.getAbsolutePath() + "/camtest");
@@ -436,6 +447,7 @@ public class SelfieActivity extends AppCompatActivity {
                     }
                 }*/
             }
+
             return null;
         }
     }

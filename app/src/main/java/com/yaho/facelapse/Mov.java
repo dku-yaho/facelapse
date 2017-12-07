@@ -1,4 +1,4 @@
 package com.yaho.facelapse;
 
-public class Mov extends Video implements VideoOperation {
-}
+//public class Mov extends Video implements VideoOperation {//
+//}

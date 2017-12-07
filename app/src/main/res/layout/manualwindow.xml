@@ -1,77 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/m_bg"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/manualTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:text="FaceLapse Rules"
-        android:textSize="46sp"
-        android:textStyle="bold" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/manual1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/manualTitle"
-        android:layout_below="@+id/manualTitle"
-        android:layout_marginTop="40dp"
-        android:text="1  Selfie  per  Day"
-        android:textSize="36sp" />
+        <TextView
+            android:id="@+id/manualTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="FaceLapse  Rules"
+            android:textAlignment="center"
+            android:layout_marginTop="10dp"
+            android:textSize="42sp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/manual2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/manualTitle"
-        android:layout_below="@+id/manual1"
-        android:layout_marginTop="40dp"
-        android:text="30  Photos  for  1  Video"
-        android:textSize="36sp" />
+        <TextView
+            android:id="@+id/num1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="   1"
+            android:textSize="20sp"
+            android:textStyle="bold|italic" />
 
-    <TextView
-        android:id="@+id/manual3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/manualTitle"
-        android:layout_below="@+id/manual2"
-        android:layout_marginTop="40dp"
-        android:text="No  Delete  Function"
-        android:textSize="36sp" />
+        <TextView
+            android:id="@+id/manual1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="    1  Selfie  per  Day"
+            android:textSize="30sp" />
 
-    <TextView
-        android:id="@+id/num1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/manual2"
-        android:layout_marginEnd="20dp"
-        android:layout_toStartOf="@+id/manual2"
-        android:text="1"
-        android:textSize="46sp"
-        android:textStyle="bold|italic" />
+        <TextView
+            android:id="@+id/manual1_k"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="    하루에 딱! 한 장만 찍을 수 있어요."
+            android:textSize="15sp" />
 
-    <TextView
-        android:id="@+id/num2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/manual3"
-        android:layout_alignStart="@+id/num1"
-        android:text="2"
-        android:textSize="46sp"
-        android:textStyle="bold|italic" />
+        <TextView
+            android:id="@+id/num2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="   2"
+            android:textSize="20sp"
+            android:textStyle="bold|italic" />
 
-    <TextView
-        android:id="@+id/num3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/manual3"
-        android:layout_alignStart="@+id/num2"
-        android:text="3"
-        android:textSize="46sp"
-        android:textStyle="bold|italic" />
+        <TextView
+            android:id="@+id/manual2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="    30  Photos  for  1  Video"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/manual2_k"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="    30장을 채우면 한 비디오 완성!"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/num3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="   3"
+            android:textSize="20sp"
+            android:textStyle="bold|italic" />
+
+        <TextView
+            android:id="@+id/manual3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="    No  Delete  Function"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/manual3_k"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="    자연스러운 한 장이면 충분해요!"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/manual3_k2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="    사진 확인 및 삭제 안돼요~"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
 </RelativeLayout>

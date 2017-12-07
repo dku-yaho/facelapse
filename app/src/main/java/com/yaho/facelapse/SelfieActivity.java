@@ -329,8 +329,8 @@ public class SelfieActivity extends AppCompatActivity {
                 //System.out.println("FileName="+tempFileName);
                 Date date = new Date(System.currentTimeMillis());
                 SimpleDateFormat dateFormat =
-                        //new SimpleDateFormat("yyyy-MM-dd HH.mm");//데모버전 매분마다 사진찍기 가능
-                        new SimpleDateFormat("yyyy-MM-dd");
+                        new SimpleDateFormat("yyyy-MM-dd HH.mm.ss");//데모버전 매분마다 사진찍기 가능
+                        //new SimpleDateFormat("yyyy-MM-dd");
                 String fileName = dateFormat.format(date) + ".jpg";
                // Toast.makeText(SelfieActivity.this, "file name = "+fileName+i+tempFileName,
                  //       Toast.LENGTH_LONG).show();
@@ -384,8 +384,7 @@ public class SelfieActivity extends AppCompatActivity {
             } finally {//오류가 일어나든 일어나지 않던 무조건 실행 하는 함수
                 file_num++;
                 if(file_num == 30){
-                    //동영상 만드는 함수 실행
-                    //만든후 동영상 외장 메모리에 저장
+
                 }
             }
             return null;

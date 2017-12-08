@@ -19,4 +19,8 @@
         <item name="android:progressBackgroundTint">#69f0ae</item>
     </style>
 
+    <style name="SplashTheme" parent="@android:style/Theme.Light.NoTitleBar">
+        <item name = "android:windowBackground">@drawable/bg_loading</item>
+    </style>
+
 </resources>

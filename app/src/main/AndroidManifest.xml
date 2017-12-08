@@ -14,12 +14,22 @@
         android:roundIcon="@mipmap/iconsample"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+
+        <!-- Splash Activity 로딩화면 액티비티 -->
+        <activity
+            android:name=".LoadingActivity"
+            android:theme="@style/SplashTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".MainActivity">
+        </activity>
+        <!--여기까지가 메인 액티비티 수정하고 로딩액티비티 합친부분-->
+
 
         <activity
             android:name=".ScreenActivity">

@@ -18,23 +18,29 @@ import java.io.IOException;
 
 public class Video extends FileHandler implements FileOperation {
 
+    File targetStorage = null;
     final String TAG = "Video";
     final int FRAMESPERPIC = 10;
+    int progress = 0;
 
-    File internalFile;
-    File[] fileList;
     String savePoint;
     SeekableByteChannel output = null;
     AndroidSequenceEncoder encoder = null;
 
     public Video(Context context) {
         this.context = context;
+        this.internalStorage = this.context.getFilesDir();
+        settargetDir();
+    }
+
+    public int getProgress(){
+        return this.progress;
     }
 
     public void genVid() {
-        this.internalStorage = this.context.getFilesDir();
-        this.targetStorage = new File(Environment.getExternalStorageDirectory() + "/Facelapse");
+        int count = this.getNumberofFiles();
 
+        this.targetStorage = new File(Environment.getExternalStorageDirectory() + "/Facelapse");
         if(!this.targetStorage.exists()){
             this.targetStorage.mkdir();
             Log.e(TAG, "Facelapse folder created");
@@ -42,8 +48,6 @@ public class Video extends FileHandler implements FileOperation {
 
         try{
             Log.e(TAG, "Entry");
-            internalFile = new File (this.internalStorage.getAbsolutePath() + "/camtest");
-            fileList = internalFile.listFiles();
 
             savePoint = new String(this.targetStorage.toString()+"/"+System.currentTimeMillis()+".mp4");
             output = NIOUtils.writableFileChannel(savePoint);
@@ -51,7 +55,9 @@ public class Video extends FileHandler implements FileOperation {
 
             encoder = new AndroidSequenceEncoder(output, Rational.R(25, 1));
 
+            int current = 0;
             for (File tempFile : fileList) {
+                this.progress = (current / count) * 100;
                 String curFile = getFullPath(tempFile);
 
                 Log.e(TAG, "Current File: " + curFile);
@@ -64,7 +70,6 @@ public class Video extends FileHandler implements FileOperation {
             }
             encoder.finish();
             Log.e(TAG, "Finished Generating Vid: " + savePoint);
-
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

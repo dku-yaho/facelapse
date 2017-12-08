@@ -23,6 +23,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.os.StatFs;
 import android.provider.MediaStore;
@@ -68,6 +69,7 @@ public class SelfieActivity extends AppCompatActivity {
     private final static int CAMERA_FACING = Camera.CameraInfo.CAMERA_FACING_FRONT;
     private AppCompatActivity mActivity;
     private ProgressBar progressBar;
+    FileHandler filehandler;
 
     //내부저장소에 여유 공간 확인
     private double checkInternalAvailableMemory() {
@@ -170,6 +172,7 @@ public class SelfieActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ctx = this;
         mActivity = this;
+        filehandler = new FileHandler(ctx);
 
         //사진 저장할 공간이 부족한 경우
         double size = checkInternalAvailableMemory();
@@ -205,21 +208,6 @@ public class SelfieActivity extends AppCompatActivity {
             }
         });
 
-        int count = 0;
-        progressBar = (ProgressBar)findViewById(R.id.progressBar);
-        File sdCard = getFilesDir();
-        File dir = new File (sdCard.getAbsolutePath() + "/camtest");//사용자에게 사진이 보이지 않아야 하므로 내부 저장소(camtest디렉토리에)에 저장
-        File[] fileList = dir.listFiles();
-
-        if(fileList == null){
-        } else{
-            for (File tempFile : fileList) {
-                count++;
-            }
-        }
-        Log.e(TAG, "Progressbar set to:"+Integer.toString(count)+"/30");
-        progressBar.setProgress(count);
-
         //api level에 맞게 카메라저장소 사용 permission받기
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { //API 23 이상이면
@@ -248,7 +236,15 @@ public class SelfieActivity extends AppCompatActivity {
         } else {
             Toast.makeText(SelfieActivity.this, "Camera not supported",
                     Toast.LENGTH_LONG).show();
+            this.finish();
         }
+
+        int count = 0;
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+
+        count = filehandler.getNumberofFiles();
+        progressBar.setProgress(count);
+        Log.e(TAG, "Progressbar set to:"+Integer.toString(count)+"/30");
     }
 
     //설정한 camera preview에 뿌려주기 시작
@@ -360,9 +356,6 @@ public class SelfieActivity extends AppCompatActivity {
                 if(tempFileName.equals(fileName)){//오늘 파일이 이미 만들어 진 경우 1 return
                     Toast.makeText(SelfieActivity.this, "Already take photo for today",
                             Toast.LENGTH_LONG).show();
-                    Video test = new Video(ctx);
-                    test.genVid();
-
                     return 1;
                 }
                 /*else{//오늘 파일이 만들어지지 않은 경우
@@ -372,31 +365,26 @@ public class SelfieActivity extends AppCompatActivity {
             }
         }
 
-        Video test = new Video(ctx);
-        test.genVid();
-
         return 0;//오늘 파일이 만들어지지 않은 경우 0 return
     }
     //찍은 사진 저장
     private class SaveImageTask extends AsyncTask<byte[], Void, Void> {
         @Override
         protected Void doInBackground(byte[]... data) {
-            int file_num=0;
+            int count = 0;
             FileOutputStream outStream = null;
-
             try {
                 //File sdCard = Environment.getExternalStorageDirectory();
-                File sdCard = getFilesDir();
-                File dir = new File (sdCard.getAbsolutePath() + "/camtest");//사용자에게 사진이 보이지 않아야 하므로 내부 저장소(camtest디렉토리에)에 저장
-                dir.mkdirs();//camtest라는 디렉토리가 없는 경우 새로 만들고 있는 경우 skip
+
+                filehandler.targetDir.mkdirs();//camtest라는 디렉토리가 없는 경우 새로 만들고 있는 경우 skip
 
                 Date date = new Date(System.currentTimeMillis());
                 SimpleDateFormat dateFormat =
-                        new SimpleDateFormat("yyyy-MM-dd HH.mm");//데모 버전
-                        //new SimpleDateFormat("yyyy-MM-dd");
+                        new SimpleDateFormat("yyyy-MM-dd HH.mm.ss");//데모 버전
+                //new SimpleDateFormat("yyyy-MM-dd");
                 String fileName = dateFormat.format(date) + ".jpg";
                 // String fileName = String.format("%d.jpg", System.currentTimeMillis());//filename은 현재 시간을 받아서 설정
-                File outFile = new File(dir, fileName);
+                File outFile = new File(filehandler.targetDir, fileName);
 
                 outStream = new FileOutputStream(outFile);
                 outStream.write(data[0]);
@@ -411,147 +399,25 @@ public class SelfieActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {//오류가 일어나든 일어나지 않던 무조건 실행 하는 함수
-                file_num++;
-                if(file_num == 30){
+                count = filehandler.getNumberofFiles();
+                progressBar.setProgress(count);
+                Log.e(TAG, "Progressbar set to:" + Integer.toString(count) + "/30");
 
-                    /**
-                     * < If 찍은 사진이 30번째 사진,
-                     *   인코딩하는 동시에 띄울 ProgressDialog >
-                     *
-                     * 이 if(file_num == 30) 안에 넣은게 모두 새로 추가한 거구여
-                     * 이 Activity에 넣는게 맞는지도 모르겠구여
-                     * 진행정도를 나타내는 thread 부분을 모르겠습니다 ;ㅇ;
-                     */
-                    final ProgressDialog dialog = new ProgressDialog(SelfieActivity.this);
-                    //dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL); // 바 형태의 Progress Dialog
-                    dialog.setMax(100);
-                    dialog.setMessage("Making video for you :)");
-                    dialog.show();          // ProgressDialog 보여줌
-
-                    //dialog.setProgress(); // 스레드 사용해서 Thread 진행정도 나타내는 부분
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                while (dialog.getProgress() <= dialog.getMax()) {
-                                    Thread.sleep(200);
-                                    handle.sendMessage(handle.obtainMessage());
-
-                                    if (dialog.getProgress() == dialog.getMax()) {
-                                        dialog.dismiss(); // 전부 진행시 Dialog 창 내리고
-                                        // 메인화면으로 가던지, 갤러리로 가던지, 파일을 열어주던지
-                                    }
-                                }
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        Handler handle = new Handler() {
-                            @Override
-                            public void handleMessage(Message msg) {
-                                super.handleMessage(msg);
-                                dialog.incrementProgressBy(1);
-                            }
-                        };
-                    }).start();
-
+                if (count >= 5) {
+                    Intent change = new Intent(getApplicationContext(), GenvidActivity.class);
+                    startActivity(change);
+                    SelfieActivity.this.finish();
                 }
-
-
-               /* if(file_num == 5){
-                    File sdCard = getFilesDir();
-                    File dirFile = new File (sdCard.getAbsolutePath() + "/camtest");
-                    File []fileList=dirFile.listFiles();
-                    for(File tempFile : fileList) {
-                        if (tempFile.isFile()) {//파일이 있는 경우
-                            int size = (int) tempFile.length();
-                            byte[] bytes = new byte[size];
-                            try {
-                                BufferedInputStream buf = new BufferedInputStream(new FileInputStream(tempFile));
-                                buf.read(bytes, 0, bytes.length);
-                                buf.close();
-                            } catch (FileNotFoundException e) {
-                                // TODO Auto-generated catch block
-                                e.printStackTrace();
-                            } catch (IOException e) {
-                                // TODO Auto-generated catch block
-                                e.printStackTrace();
-                            }
-                            try {
-                                File sdCard1 = Environment.getExternalStorageDirectory();
-                                //File sdCard = getFilesDir();
-                                File dir = new File (sdCard1.getAbsolutePath() + "/camtest");//사용자에게 사진이 보이지 않아야 하므로 내부 저장소(camtest디렉토리에)에 저장
-                                dir.mkdirs();//camtest라는 디렉토리가 없는 경우 새로 만들고 있는 경우 skip
-
-                                Date date = new Date(System.currentTimeMillis());
-                                SimpleDateFormat dateFormat =
-                                        //new SimpleDateFormat("yyyy-MM-dd HH.mm");//데모 버전
-                                        new SimpleDateFormat("yyyy-MM-dd");
-                                String fileName = dateFormat.format(date) + ".jpg";
-                                // String fileName = String.format("%d.jpg", System.currentTimeMillis());//filename은 현재 시간을 받아서 설정
-                                File outFile = new File(dir, fileName);
-
-                                outStream = new FileOutputStream(outFile);
-                                outStream.write(bytes[0]);
-                                outStream.flush();
-                                outStream.close();
-
-                                Log.d(TAG, "onPictureTaken - wrote bytes: " + data.length + " to "
-                                        + outFile.getAbsolutePath());
-                                refreshGallery(outFile);
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            //tempFile.delete();
-                        }
-                    }
-                }*/
+                return null;
             }
-            progressBar.setProgress(file_num);
-
-            return null;
         }
-    }
 
-    private class SaveImageTasktoEx extends AsyncTask<byte[], Void, Void> {
         @Override
-        protected Void doInBackground(byte[]... data) {
-            int file_num=0;
-            FileOutputStream outStream = null;
-
-            try {
-                //File sdCard = Environment.getExternalStorageDirectory();
-                File sdCard = getFilesDir();
-                File dir = new File (sdCard.getAbsolutePath() + "/camtest");//사용자에게 사진이 보이지 않아야 하므로 내부 저장소(camtest디렉토리에)에 저장
-                dir.mkdirs();//camtest라는 디렉토리가 없는 경우 새로 만들고 있는 경우 skip
-
-                Date date = new Date(System.currentTimeMillis());
-                SimpleDateFormat dateFormat =
-                        //new SimpleDateFormat("yyyy-MM-dd HH.mm");//데모 버전
-                        new SimpleDateFormat("yyyy-MM-dd");
-                String fileName = dateFormat.format(date) + ".jpg";
-                // String fileName = String.format("%d.jpg", System.currentTimeMillis());//filename은 현재 시간을 받아서 설정
-                File outFile = new File(dir, fileName);
-
-                outStream = new FileOutputStream(outFile);
-                outStream.write(data[0]);
-                outStream.flush();
-                outStream.close();
-
-                Log.d(TAG, "onPictureTaken - wrote bytes: " + data.length + " to "
-                        + outFile.getAbsolutePath());
-                refreshGallery(outFile);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {//오류가 일어나든 일어나지 않던 무조건 실행 하는 함수
-            }
-            return null;
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
         }
     }
+
     /**
      * reference by https://developer.android.com/reference/android/hardware/Camera.html
      */

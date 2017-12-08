@@ -208,8 +208,11 @@ public class SelfieActivity extends AppCompatActivity {
         File dir = new File (sdCard.getAbsolutePath() + "/camtest");//사용자에게 사진이 보이지 않아야 하므로 내부 저장소(camtest디렉토리에)에 저장
         File[] fileList = dir.listFiles();
 
-        for (File tempFile : fileList) {
-            count++;
+        if(fileList == null){
+        } else{
+            for (File tempFile : fileList) {
+                count++;
+            }
         }
         Log.e(TAG, "Progressbar set to:"+Integer.toString(count)+"/30");
         progressBar.setProgress(count);

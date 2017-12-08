@@ -19,54 +19,58 @@ import java.io.IOException;
 public class Video extends FileHandler implements FileOperation {
 
     final String TAG = "Video";
-    Context context;
-    static File[] pictures;
+    final int FRAMESPERPIC = 10;
+
+    File internalFile;
+    File[] fileList;
+    String savePoint;
+    SeekableByteChannel output = null;
+    AndroidSequenceEncoder encoder = null;
 
     public Video(Context context) {
         this.context = context;
     }
 
     public void genVid() {
-        File sdCard = context.getFilesDir();
-        File targetStorage = new File(Environment.getExternalStorageDirectory() + "/Facelapse");
+        this.internalStorage = this.context.getFilesDir();
+        this.targetStorage = new File(Environment.getExternalStorageDirectory() + "/Facelapse");
 
-        if(!targetStorage.exists()){
-            targetStorage.mkdir();
+        if(!this.targetStorage.exists()){
+            this.targetStorage.mkdir();
             Log.e(TAG, "Facelapse folder created");
         }
 
-        final int FRAMES = 10;
-        SeekableByteChannel out = null;
-        AndroidSequenceEncoder encoder;
         try{
             Log.e(TAG, "Entry");
-            File dirFile = new File (sdCard.getAbsolutePath() + "/camtest");
-            File[] fileList = dirFile.listFiles();
+            internalFile = new File (this.internalStorage.getAbsolutePath() + "/camtest");
+            fileList = internalFile.listFiles();
 
-            String savePoint = new String(targetStorage.toString()+"/"+System.currentTimeMillis()+".mp4");
-            out = NIOUtils.writableFileChannel(savePoint);
+            savePoint = new String(this.targetStorage.toString()+"/"+System.currentTimeMillis()+".mp4");
+            output = NIOUtils.writableFileChannel(savePoint);
             Log.e(TAG, "Saving Point: "+savePoint);
-            encoder = new AndroidSequenceEncoder(out, Rational.R(25, 1));
+
+            encoder = new AndroidSequenceEncoder(output, Rational.R(25, 1));
 
             for (File tempFile : fileList) {
-                String tempPath = tempFile.getParent();
-                String tempFileName = tempFile.getName();
+                String curFile = getFullPath(tempFile);
 
-                Log.e(TAG, "File Found: " + tempPath + "/" + tempFileName);
-                Bitmap image = BitmapFactory.decodeFile(tempPath+"/"+tempFileName);
+                Log.e(TAG, "Current File: " + curFile);
+                Bitmap image = BitmapFactory.decodeFile(curFile);
 
-                for(int i = 1; i < FRAMES; i++){
+                for(int i = 1; i < FRAMESPERPIC; i++){
                     encoder.encodeImage(image);
-                    Log.e(TAG, "Encoded: " + tempPath + "/" + tempFileName);
+                    Log.e(TAG, "Encoded: " + curFile);
                 }
             }
             encoder.finish();
+            Log.e(TAG, "Finished Generating Vid: " + savePoint);
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            NIOUtils.closeQuietly(out);
+            NIOUtils.closeQuietly(output);
         }
     }
 }

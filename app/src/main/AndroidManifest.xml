@@ -41,10 +41,6 @@
         </activity>
 
         <activity
-            android:name=".GenvidActivity">
-        </activity>
-
-        <activity
             android:name=".Pop"
             android:theme="@style/AppTheme.CustomTheme">
 

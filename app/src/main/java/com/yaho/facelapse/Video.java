@@ -21,7 +21,8 @@ public class Video extends FileHandler implements FileOperation {
     File targetStorage = null;
     final String TAG = "Video";
     final int FRAMESPERPIC = 10;
-    int progress = 0;
+    static int progress;
+    boolean done = false;
 
     String savePoint;
     SeekableByteChannel output = null;
@@ -37,6 +38,9 @@ public class Video extends FileHandler implements FileOperation {
         return this.progress;
     }
 
+    public int getProg(float current, float count){
+        return (int)(current / count * 100);
+    }
     public void genVid() {
         int count = this.getNumberofFiles();
 
@@ -55,9 +59,14 @@ public class Video extends FileHandler implements FileOperation {
 
             encoder = new AndroidSequenceEncoder(output, Rational.R(25, 1));
 
+            int temp = 0;
             int current = 0;
+
             for (File tempFile : fileList) {
-                this.progress = (current / count) * 100;
+                current++;
+                progress = getProg((float)current, (float)count);
+                Log.e(TAG, Integer.toString(current) + " / " + Integer.toString(count) + " / " + getProg((float)current, (float)count));
+
                 String curFile = getFullPath(tempFile);
 
                 Log.e(TAG, "Current File: " + curFile);
@@ -70,6 +79,7 @@ public class Video extends FileHandler implements FileOperation {
             }
             encoder.finish();
             Log.e(TAG, "Finished Generating Vid: " + savePoint);
+            done = true;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

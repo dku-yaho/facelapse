@@ -62,6 +62,9 @@ public class SelfieActivity extends AppCompatActivity {
     Preview preview;
     Camera camera;
     Context ctx;
+
+    ProgressDialog genProgress;
+
     private final static int PERMISSIONS_REQUEST_CODE = 100;
     private final static int REQUEST_TAKE_ALBUM = 2002;
     // Camera.CameraInfo.CAMERA_FACING_FRONT or Camera.CameraInfo.CAMERA_FACING_BACK
@@ -369,6 +372,7 @@ public class SelfieActivity extends AppCompatActivity {
     }
     //찍은 사진 저장
     private class SaveImageTask extends AsyncTask<byte[], Void, Void> {
+        private int count = 0;
         @Override
         protected Void doInBackground(byte[]... data) {
             int count = 0;
@@ -399,22 +403,51 @@ public class SelfieActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {//오류가 일어나든 일어나지 않던 무조건 실행 하는 함수
-                count = filehandler.getNumberofFiles();
-                progressBar.setProgress(count);
-                Log.e(TAG, "Progressbar set to:" + Integer.toString(count) + "/30");
 
-                if (count >= 5) {
-                    Intent change = new Intent(getApplicationContext(), GenvidActivity.class);
-                    startActivity(change);
-                    SelfieActivity.this.finish();
-                }
                 return null;
             }
+        }
+
+        protected void onPostExecute(final Void avoid) {
+            super.onPostExecute(avoid);
+            count = filehandler.getNumberofFiles();
+            progressBar.setProgress(count);
+            Log.e(TAG, "Progressbar set to:" + Integer.toString(count) + "/30");
+
+            if(count >= 5) {
+                Log.e(TAG, "Video Generation");
+                new GenVid().execute();
+            }
+        }
+    }
+
+    private class GenVid extends AsyncTask<Void, Void, Void> {
+
+        Video video;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            video = new Video(ctx);
+
+            genProgress = new ProgressDialog(ctx);
+            genProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            genProgress.setCancelable(false);
+            genProgress.setTitle("Generating Your Video :)");
+            genProgress.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            video.genVid();
+            video.deleteFiles();
+            return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            genProgress.dismiss();
+            SelfieActivity.this.finish();
         }
     }
 

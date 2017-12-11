@@ -26,14 +26,6 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
 
     // [END refresh_token]
 
-    /**
-     * Persist token to third-party servers.
-     *
-     * Modify this method to associate the user's FCM InstanceID token with any server-side account
-     * maintained by your application.
-     *
-     * @param token The new token.
-     */
     private void sendRegistrationToServer(String token) {
     }
 }
